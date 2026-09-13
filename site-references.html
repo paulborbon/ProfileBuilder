@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Site References · Beta Version</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<main class="container py-4">
+  <div class="brand-section mb-4">
+    <h1 class="h2">Site References</h1>
+    <p class="mb-0">Browse useful websites, services, tools, and partners reviewed for inclusion. New submissions are reviewed before they appear here.</p>
+  </div>
+
+  <div class="reference-toolbar mb-4">
+    <input id="refSearch" class="form-control" placeholder="Search references…">
+    <select id="refCategory" class="form-select">
+      <option value="all">All Categories</option>
+      <option>Website & Development</option><option>Virtual Assistance</option><option>AI Tools</option>
+      <option>Business Services</option><option>Marketing & SEO</option><option>Software & SaaS</option>
+      <option>Training & Education</option><option>IT Services</option><option>Other</option>
+    </select>
+    <a class="btn pb-button" href="submit-site.html">+ Submit Your Site</a>
+  </div>
+
+  <section id="referenceGrid" class="reference-grid">
+    <article class="reference-card" data-reference-id="maven-website-builder" data-category="Website & Development" data-search="maven website builder website design development">
+      <div class="reference-badge">Featured Reference</div>
+      <div class="reference-icon">🌐</div>
+      <h2 class="h4">Maven Website Builder</h2>
+      <p>Website design and website-building reference for businesses and individuals looking for a guided website solution.</p>
+      <div class="reference-meta">
+        <span>Website & Development</span><span>Pricing: Ask for current offer</span>
+      </div>
+
+      <div class="reference-rating mt-3" aria-label="Reference rating">
+        <div class="reference-rating-stars" aria-hidden="true">★★★★★</div>
+        <strong data-rating-average>New</strong>
+        <span class="small-note" data-rating-count>0 votes</span>
+      </div>
+
+      <div class="d-flex gap-2 flex-wrap mt-3">
+        <a class="btn pb-button" href="referral.html">Inquire</a>
+        <button class="btn btn-outline-primary" type="button" data-vote-reference data-reference-id="maven-website-builder" data-reference-name="Maven Website Builder">★ Vote / Rate</button>
+        <button class="btn btn-outline-secondary" type="button" disabled>Website link pending</button>
+      </div>
+      <p class="disclosure mt-3 mb-0">Reference disclosure: If a listing becomes sponsored or commission-based, it will be clearly identified.</p>
+    </article>
+  </section>
+
+  <div class="text-center py-4"><a class="btn pb-button" href="submit-site.html">Want to be listed? Submit Your Site</a></div>
+</main>
+
+<!-- Vote / Rate modal -->
+<div id="referenceVoteModal" class="pb-modal" hidden>
+  <div class="pb-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="voteModalTitle" tabindex="-1">
+    <button class="pb-modal-close" type="button" aria-label="Close" data-close-vote>×</button>
+    <p class="reference-badge mb-2">Community Rating</p>
+    <h2 id="voteModalTitle" class="h4">Rate <span id="voteReferenceName">this reference</span></h2>
+    <p class="small-note">Your star rating can be counted when the secure backend is enabled. Written comments are moderation-ready and should not be published automatically.</p>
+
+    <form id="referenceVoteForm">
+      <input type="hidden" id="voteReferenceId">
+      <input type="hidden" id="voteRating">
+
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label" for="voteName">Full Name or Alias</label>
+          <input id="voteName" class="form-control" maxlength="80" placeholder="Example: Paul B. or TechFan21" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label" for="voteEmail">Email Address <span class="small-note">(optional)</span></label>
+          <input id="voteEmail" class="form-control" type="email" maxlength="160" placeholder="you@example.com">
+        </div>
+        <div class="col-12">
+          <label class="form-label">Your Rating</label>
+          <div class="vote-stars" aria-label="Choose a rating from 1 to 5 stars">
+            <button type="button" data-rating="1" aria-label="1 star">★</button>
+            <button type="button" data-rating="2" aria-label="2 stars">★</button>
+            <button type="button" data-rating="3" aria-label="3 stars">★</button>
+            <button type="button" data-rating="4" aria-label="4 stars">★</button>
+            <button type="button" data-rating="5" aria-label="5 stars">★</button>
+          </div>
+          <div id="voteReaction" class="vote-reaction mt-2" hidden></div>
+        </div>
+        <div class="col-12">
+          <label class="form-label" for="voteComment">Description / Comment</label>
+          <textarea id="voteComment" class="form-control" rows="4" maxlength="1000" placeholder="Tell others about your experience with this reference."></textarea>
+        </div>
+      </div>
+
+      <div class="d-flex gap-2 flex-wrap align-items-center mt-4">
+        <button class="btn pb-button" type="submit">Submit Vote</button>
+        <button class="btn btn-outline-secondary" type="button" data-close-vote>Cancel</button>
+        <span id="voteStatus" class="small-note"></span>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="../javascript/config.js"></script>
+<script src="../javascript/site-services.js"></script>
+<script src="../javascript/reference-voting.js"></script>
+<script src="../javascript/app.js"></script>
+<script>
+const q=document.getElementById('refSearch'),c=document.getElementById('refCategory');
+function filterRefs(){const query=q.value.toLowerCase().trim(),cat=c.value;document.querySelectorAll('.reference-card').forEach(card=>{const matchesText=!query||(card.dataset.search||card.textContent).toLowerCase().includes(query);const matchesCat=cat==='all'||card.dataset.category===cat;card.hidden=!(matchesText&&matchesCat);});}
+q.addEventListener('input',filterRefs);c.addEventListener('change',filterRefs);
+</script>
+</body>
+</html>
