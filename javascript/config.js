@@ -1,6 +1,6 @@
 window.PB_CONFIG = Object.freeze({
   version: "Beta Version",
-  backendUrl: "", // Configure this after you deploy the secure backend. Never put API keys here.
+  backendUrl: "https://promptbuilder-backend.paulborbon.workers.dev",
   createdDate: "13 Sep 2026",
   updatedDate: "13 Sep 2026",
   endpoints: Object.freeze({
