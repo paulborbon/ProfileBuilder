@@ -35,16 +35,33 @@
   }
   window.PBSaveCurrentProject=saveCurrent;
 
+
+  function showUnsavedDialog(){
+    return new Promise(resolve=>{
+      const old=document.getElementById('pbUnsavedModal'); if(old) old.remove();
+      const wrap=document.createElement('div'); wrap.id='pbUnsavedModal';
+      wrap.innerHTML=`<div class="pb-unsaved-backdrop"><div class="pb-unsaved-box" role="dialog" aria-modal="true" aria-labelledby="pbUnsavedTitle"><h2 id="pbUnsavedTitle">Unsaved changes</h2><p>You have unsaved changes. What would you like to do?</p><div class="pb-unsaved-actions"><button type="button" data-choice="save" class="pb-unsaved-primary">Save & Home</button><button type="button" data-choice="discard" class="pb-unsaved-danger">Discard & Home</button><button type="button" data-choice="cancel">Cancel</button></div></div></div>`;
+      const style=document.createElement('style');
+      style.textContent=`.pb-unsaved-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.62);display:grid;place-items:center;z-index:99999;padding:20px}.pb-unsaved-box{width:min(520px,100%);background:#111a22;color:#fff;border:1px solid #3d5c70;border-radius:16px;padding:24px;box-shadow:0 24px 60px rgba(0,0,0,.45)}.pb-unsaved-box h2{margin:0 0 8px}.pb-unsaved-box p{color:#c8d7e0}.pb-unsaved-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:22px}.pb-unsaved-actions button{border:1px solid #557084;border-radius:10px;padding:11px 12px;cursor:pointer;font-weight:700;background:#263745;color:#fff}.pb-unsaved-actions .pb-unsaved-primary{background:#1688ff;border-color:#1688ff}.pb-unsaved-actions .pb-unsaved-danger{background:#7d2631;border-color:#a93d4b}@media(max-width:560px){.pb-unsaved-actions{grid-template-columns:1fr}}`;
+      wrap.appendChild(style); document.body.appendChild(wrap);
+      function finish(choice){wrap.remove();resolve(choice);}
+      wrap.querySelectorAll('[data-choice]').forEach(btn=>btn.addEventListener('click',()=>finish(btn.dataset.choice)));
+      wrap.querySelector('.pb-unsaved-backdrop').addEventListener('click',e=>{if(e.target===e.currentTarget)finish('cancel')});
+      document.addEventListener('keydown',function esc(ev){if(ev.key==='Escape'){document.removeEventListener('keydown',esc);finish('cancel')}},{once:true});
+    });
+  }
+
   function bindShell(){
     document.getElementById('themeToggleGlobal')?.addEventListener('click',()=>{document.body.classList.toggle('dark-mode');localStorage.setItem('pb_theme',document.body.classList.contains('dark-mode')?'dark':'light')});
     document.getElementById('globalSave')?.addEventListener('click',saveCurrent);
     document.getElementById('globalHome')?.addEventListener('click',async e=>{
       if(!window.PB_DIRTY) return;
       e.preventDefault();
-      const choice=prompt('You have unsaved changes. Type SAVE to save and go Home, DISCARD to go Home without saving, or CANCEL to stay here.','SAVE');
-      if(!choice||choice.toUpperCase()==='CANCEL') return;
-      if(choice.toUpperCase()==='SAVE'){const ok=await saveCurrent();if(!ok)return;}
-      if(['SAVE','DISCARD'].includes(choice.toUpperCase())) location.href=e.currentTarget.href;
+      const target=e.currentTarget.href;
+      const choice=await showUnsavedDialog();
+      if(choice==='cancel') return;
+      if(choice==='save'){const ok=await saveCurrent();if(!ok)return;}
+      if(choice==='save'||choice==='discard') location.href=target;
     });
     document.querySelectorAll('input,select,textarea').forEach(el=>el.addEventListener('input',()=>setDirty(true)));
   }
