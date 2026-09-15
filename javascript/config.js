@@ -10,6 +10,7 @@ window.PB_CONFIG = Object.freeze({
     siteReference: "/api/site-reference",
     referenceVote: "/api/reference-vote",
     referenceRatings: "/api/reference-ratings",
+    referenceTestimonials: "/api/reference-testimonials",
     testimonials: "/api/testimonials",
     visitorCount: "/api/visitor-count",
     generateImage: "/api/ai/generate-image",

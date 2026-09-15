@@ -1,1 +1,31 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Testimonials · Beta Version</title><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"><link rel="stylesheet" href="../css/style.css"></head><body><main class="container py-4"><div class="brand-section mb-4"><h1 class="h2">Testimonials</h1><p class="mb-0">Approved feedback from users may appear here. Nothing is published automatically.</p></div><div id="testimonialGrid" class="testimonial-grid"><div class="api-card"><h2 class="h5">No approved testimonials are loaded yet.</h2><p class="small-note mb-0">The public testimonial feed will appear here after the secure site service is configured and submissions are approved.</p></div></div><div class="text-center mt-4"><a class="btn pb-button" href="feedback.html">Leave Feedback</a></div></main><script src="../javascript/config.js"></script><script src="../javascript/site-services.js"></script><script src="../javascript/app.js"></script><script>(async()=>{if(!PBSiteServices.isConfigured())return;try{const data=await PBSiteServices.get('testimonials');const items=Array.isArray(data)?data:(data.items||[]);if(!items.length)return;testimonialGrid.innerHTML=items.map(x=>`<article class="testimonial-card"><div class="stars">${'★'.repeat(Math.max(1,Math.min(5,Number(x.rating)||5)))}</div><blockquote>${String(x.comments||'').replace(/[<>]/g,'')}</blockquote><strong>${String(x.displayName||'Anonymous').replace(/[<>]/g,'')}</strong></article>`).join('');}catch{}})();</script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Testimonials · Beta Version</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<main class="container py-4">
+  <div class="brand-section mb-4">
+    <h1 id="testimonialTitle" class="h2">Testimonials</h1>
+    <p class="mb-0">Approved feedback from our community. Nothing is published automatically.</p>
+  </div>
+  <section class="api-card mb-4" aria-label="Rating summary">
+    <p class="mb-0" id="testimonialSummary">Average rating: — · Total votes: —</p>
+  </section>
+  <p id="testimonialStatus" class="small-note" role="status" aria-live="polite">Loading testimonials…</p>
+  <button id="testimonialRetry" class="btn btn-outline-primary mb-3" type="button" hidden>Try again</button>
+  <div id="testimonialGrid" class="testimonial-grid" aria-busy="true"></div>
+  <div class="text-center mt-4">
+    <a id="testimonialAction" class="btn pb-button" href="feedback.html">Leave Feedback</a>
+  </div>
+</main>
+<script src="../javascript/config.js"></script>
+<script src="../javascript/site-services.js"></script>
+<script src="../javascript/app.js"></script>
+<script src="../javascript/testimonials.js"></script>
+</body>
+</html>

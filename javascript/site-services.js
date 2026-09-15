@@ -26,11 +26,26 @@ window.PBSiteServices = {
     const data = await response.json().catch(() => ({}));
     if (!response.ok) throw new Error(data.error || "The request could not be completed.");
     return data;
-  },
-  async get(name) {
-    const response = await fetch(this.endpoint(name));
+  },  
+  async get(name, params = {}) {
+    const url = new URL(this.endpoint(name));
+
+  // Add optional query parameters to the request.
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== "") {
+      url.searchParams.set(key, value);
+    }
+  });
+
+    const response = await fetch(url.toString());
+
     const data = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(data.error || "The request could not be completed.");
+
+    if (!response.ok) {
+      throw new Error(data.error || "The request could not be completed.");
+    }
+
     return data;
   }
+
 };

@@ -22,7 +22,7 @@
     const footer=document.createElement('footer');
     footer.className='pb-footer';
     const cfg=window.PB_CONFIG||{};
-    footer.innerHTML=`<div><strong>Created and Maintained by: Paul</strong> · Created: ${cfg.createdDate||'13 Sep 2026'} · Updated: ${cfg.updatedDate||'13 Sep 2026'} · <span class="version-badge">Beta</span></div><div class="footer-right">Visitors: <span id="pbVisitors">…</span> · <a href="${pagePrefix}site-references.html">Site References</a> · <a href="${pagePrefix}testimonials.html">Testimonials</a></div>`;
+    footer.innerHTML=`<div><strong>Created and Maintained by: Paul</strong> · Powered By: Agentic AI · Created: ${cfg.createdDate||'13 Sep 2026'} · Updated: ${cfg.updatedDate||'13 Sep 2026'} · <span class="version-badge">Beta</span></div><div class="footer-right">Visitors: <span id="pbVisitors">…</span> · <a href="${pagePrefix}site-references.html">Site References</a> · <a href="${pagePrefix}testimonials.html">Testimonials</a></div>`;
     document.body.appendChild(footer);
   }
 
