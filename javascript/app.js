@@ -156,7 +156,7 @@
       if(!label||label.querySelector('.help-icon')||label.tagName!=='LABEL') return;
       const icon=document.createElement('span');icon.className='help-icon';icon.textContent='i';icon.tabIndex=0;icon.setAttribute('aria-label','Information');
       const help=helpText(el,label);
-      icon.setAttribute('title',help); // Native browser tooltip fallback.
+      icon.setAttribute('aria-label','Information: '+help); // Accessible help without a duplicate native tooltip.
       label.appendChild(icon);
       const show=e=>{tip.textContent=help;tip.style.display='block';move(e)};
       const move=e=>{const x=(e.clientX||0)+16,y=(e.clientY||0)+16;tip.style.left=Math.max(8,Math.min(x,innerWidth-tip.offsetWidth-12))+'px';tip.style.top=Math.max(8,Math.min(y,innerHeight-tip.offsetHeight-12))+'px'};
