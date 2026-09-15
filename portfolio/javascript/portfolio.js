@@ -20,3 +20,30 @@
     if(innerWidth<=780) sidebar?.classList.remove('open');
   }));
 })();
+
+// Portfolio uses its own shell; keep its breadcrumb independent of visit history.
+(function(){
+  const script=document.currentScript;
+  const root=new URL('../../',script.src);
+  function render(){
+    const content=document.querySelector('.content');
+    if(!content||document.getElementById('portfolioBreadcrumbs'))return;
+    const nav=document.createElement('nav');
+    nav.id='portfolioBreadcrumbs';nav.setAttribute('aria-label','Breadcrumb');
+    nav.style.cssText='display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:20px;font-size:13px;color:var(--muted)';
+    const file=location.pathname.split('/').pop();
+    const labels={'experience.html':'Experience','skills.html':'Skills & Tools','case-studies.html':'Case Studies','powershell.html':'PowerShell & Automation','mock-ticket.html':'Mock Ticket','virtual-assistant.html':'Virtual Assistant','certifications.html':'Certifications','contact.html':'Contact'};
+    const items=[['Home',new URL('index.html',root).href],['Portfolio',new URL('portfolio/index.html',root).href]];
+    if(labels[file])items.push([labels[file],location.href]);
+    items.forEach(([label,url],i)=>{
+      if(i){const sep=document.createElement('span');sep.textContent='›';nav.appendChild(sep)}
+      const el=document.createElement(i===items.length-1?'span':'a');el.textContent=label;
+      if(i===items.length-1)el.setAttribute('aria-current','page');
+      else{el.href=url;el.style.color='var(--cyan)'}
+      nav.appendChild(el);
+    });
+    content.prepend(nav);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',render);else render();
+})();
+

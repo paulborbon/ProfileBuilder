@@ -51,39 +51,73 @@
     });
   }
 
+  const SITE_ROOT = new URL('../', document.currentScript?.src || new URL(prefix+'javascript/app.js',location.href));
   const PAGE_LABELS={
     'index.html':'Home','prompt-builder.html':'Prompt Builder','ai-setup.html':'AI Access & Privacy Setup',
     'support-project.html':'Support This Project','support.html':'Report Issue','feedback.html':'Feedback',
     'submit-site.html':'Submit Your Site','site-references.html':'Site References','testimonials.html':'Testimonials',
-    'builder.html':'Build Prompt','scenes.html':'Beginning / End Scenes','projects.html':'Saved Projects'
+    'builder.html':'Build Prompt','scenes.html':'Beginning / End Scenes','projects.html':'Saved Projects',
+    'prompt.html':'Prompt','review.html':'Review','experience.html':'Experience','skills.html':'Skills & Tools',
+    'cases.html':'Case Studies','case-studies.html':'Case Studies','powershell.html':'PowerShell & Automation',
+    'mock-ticket.html':'Mock Ticket','virtual-assistant.html':'Virtual Assistant','certifications.html':'Certifications','contact.html':'Contact'
   };
-  function pageNameFromUrl(url){try{const u=new URL(url,location.href);return u.pathname.split('/').filter(Boolean).pop()||'index.html'}catch{return 'index.html'}}
+  const UTILITY_PAGES=new Set(['support-project.html','support.html','feedback.html','submit-site.html']);
+  const BUILDER_PAGES=new Set(['ai-setup.html','builder.html','scenes.html','projects.html','prompt.html','review.html']);
+  const PORTFOLIO_PAGES=new Set(['experience.html','skills.html','cases.html','case-studies.html','powershell.html','mock-ticket.html','virtual-assistant.html','certifications.html','contact.html']);
+  function siteUrl(value){
+    try{
+      if(!value)return null;
+      const u=new URL(value,location.href);
+      return u.origin===SITE_ROOT.origin && u.pathname.startsWith(SITE_ROOT.pathname) ? u : null;
+    }catch{return null}
+  }
+  function pageNameFromUrl(url){return new URL(url,location.href).pathname.split('/').filter(Boolean).pop()||'index.html'}
   function pageLabel(url){const f=pageNameFromUrl(url);return PAGE_LABELS[f]||f.replace(/\.html$/,'').replace(/[-_]/g,' ').replace(/\b\w/g,c=>c.toUpperCase())}
-  function isSameSite(url){try{return new URL(url,location.href).origin===location.origin}catch{return false}}
-  function rememberTrail(){
-    const current=location.href;
-    let trail=[];try{trail=JSON.parse(sessionStorage.getItem('pb_nav_trail')||'[]')}catch{}
-    const ref=document.referrer;
-    if(ref&&isSameSite(ref)&&ref!==current){
-      const ri=trail.findIndex(x=>x.url===ref); if(ri>=0) trail=trail.slice(0,ri+1); else trail.push({url:ref,label:pageLabel(ref)});
-    }
-    const ci=trail.findIndex(x=>x.url===current); if(ci>=0) trail=trail.slice(0,ci+1); else trail.push({url:current,label:pageLabel(current)});
-    if(pageNameFromUrl(current)!=='index.html' && !trail.some(x=>pageNameFromUrl(x.url)==='index.html')) trail.unshift({url:new URL(prefix+'index.html',location.href).href,label:'Home'});
-    trail=trail.slice(-6); sessionStorage.setItem('pb_nav_trail',JSON.stringify(trail)); return trail;
+  function crumb(path,label){return {url:new URL(path,SITE_ROOT).href,label}}
+  function hierarchy(value){
+    const u=siteUrl(value), home=crumb('index.html','Home');
+    if(!u)return [home];
+    const path=u.pathname.slice(SITE_ROOT.pathname.length), file=pageNameFromUrl(u.href);
+    if(path===''||path==='index.html')return [home];
+    const result=[home];
+    if(path.startsWith('portfolio/')||PORTFOLIO_PAGES.has(file)){
+      result.push(crumb('portfolio/index.html','Portfolio'));
+      if(path==='portfolio/'||path==='portfolio/index.html')return result;
+    }else if(BUILDER_PAGES.has(file)) result.push(crumb('pages/prompt-builder.html','Prompt Builder'));
+    result.push({url:u.href,label:pageLabel(u.href)});
+    return result;
+  }
+  // Save only this history entry's immediate launch context. Never reuse a visit trail.
+  function utilityParent(){
+    const saved=history.state?.pbBreadcrumbContext;
+    if(saved?.page===location.href)return siteUrl(saved.parent);
+    const ref=siteUrl(document.referrer);
+    const parent=ref && ref.pathname!==location.pathname ? ref.href : null;
+    try{history.replaceState({...history.state,pbBreadcrumbContext:{page:location.href,parent}},'')}catch{}
+    return siteUrl(parent);
   }
   function renderBreadcrumbs(){
-    const nav=document.getElementById('pbBreadcrumbs'); if(!nav)return;
-    const trail=rememberTrail(); nav.innerHTML='';
-    trail.forEach((item,i)=>{if(i){const sep=document.createElement('span');sep.className='pb-crumb-sep';sep.textContent='›';nav.appendChild(sep)}
-      if(i<trail.length-1){const a=document.createElement('a');a.href=item.url;a.textContent=item.label;nav.appendChild(a)}else{const span=document.createElement('span');span.className='current';span.textContent=item.label;nav.appendChild(span)}});
+    const nav=document.getElementById('pbBreadcrumbs');if(!nav)return;
+    let trail=hierarchy(location.href);
+    if(UTILITY_PAGES.has(pageNameFromUrl(location.href))){
+      const parent=utilityParent();
+      if(parent)trail=[...hierarchy(parent.href),{url:location.href,label:pageLabel(location.href)}];
+    }
+    nav.innerHTML='';
+    trail.forEach((item,i)=>{
+      if(i){const sep=document.createElement('span');sep.className='pb-crumb-sep';sep.textContent='›';nav.appendChild(sep)}
+      const el=document.createElement(i<trail.length-1?'a':'span');
+      if(i<trail.length-1)el.href=item.url;
+      else{el.className='current';el.setAttribute('aria-current','page')}
+      el.textContent=item.label;nav.appendChild(el);
+    });
   }
+  window.addEventListener('pageshow',renderBreadcrumbs);
   window.PBCancelToPrevious=function(){
-    const ref=document.referrer;
-    if(ref&&isSameSite(ref)){history.back();return}
-    let trail=[];try{trail=JSON.parse(sessionStorage.getItem('pb_nav_trail')||'[]')}catch{}
-    if(trail.length>1){location.href=trail[trail.length-2].url;return}
-    location.href=prefix+'index.html';
+    if(history.length>1){history.back();return}
+    location.href=new URL('index.html',SITE_ROOT).href;
   };
+
 
   function bindShell(){
     document.getElementById('themeToggleGlobal')?.addEventListener('click',()=>{document.body.classList.toggle('dark-mode');localStorage.setItem('pb_theme',document.body.classList.contains('dark-mode')?'dark':'light')});
