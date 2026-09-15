@@ -66,3 +66,8 @@ body.pb-modal-open{overflow:hidden}.vote-stars{display:flex;gap:.15rem;flex-wrap
 .pb-form-actions{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin-top:1.5rem}
 .pb-form-actions .pb-button{display:inline-flex;align-items:center;justify-content:center}
 @media(max-width:575px){.powered-by-row{gap:.55rem .8rem}.pb-form-actions>.pb-button{width:100%}}
+
+
+/* Breadcrumbs, standard action buttons, and dark-mode readability */
+.pb-topbar .left{display:flex;align-items:center;gap:.7rem;min-width:0}.pb-breadcrumbs{display:flex;align-items:center;gap:.38rem;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#b9d8f2;font-size:.78rem}.pb-breadcrumbs a{color:#b9d8f2;text-decoration:none}.pb-breadcrumbs a:hover{color:var(--pb-cyan);text-decoration:underline}.pb-breadcrumbs .current{color:#fff;font-weight:700}.pb-crumb-sep{color:#6f94b8}.form-actions{display:flex;gap:.7rem;align-items:center;flex-wrap:wrap;margin-top:1.5rem}.pb-button.pb-cancel{min-width:150px}.api-card h1,.api-card h2,.api-card h3,.api-card h4,.api-card h5,.api-card h6{color:var(--pb-text)}body.dark-mode .api-card,body.dark-mode .api-card h1,body.dark-mode .api-card h2,body.dark-mode .api-card h3,body.dark-mode .api-card h4,body.dark-mode .api-card h5,body.dark-mode .api-card h6{color:var(--pb-text)}
+@media(max-width:900px){.pb-breadcrumbs{max-width:46vw;font-size:.7rem}.pb-topbar .center{display:none}}
