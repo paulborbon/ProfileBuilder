@@ -63,14 +63,24 @@
       visible.forEach(item => {
         const card = element('article', 'testimonial-card', '');
         const rating = ratingOf(item);
-        const stars = element('div', 'stars', rating ? '★'.repeat(rating) + '☆'.repeat(5-rating) : 'Unrated');
+        const stars = element('div', 'stars', rating ? rating.toFixed(1) + ' ★' : 'Unrated');
         stars.setAttribute('aria-label', rating ? `${rating} out of 5 stars` : 'Unrated');
         const comment = element('blockquote', '', publicText(item.comment || item.comments) || 'No written comment.');
         comment.style.whiteSpace = 'pre-wrap';
         comment.style.overflowWrap = 'anywhere';
-        const name = element('p', 'mb-0', 'Full Name / Alias: ' + displayName(item));
+        const name = element('p', 'mt-2 mb-0 fw-bold', displayName(item));
         name.style.overflowWrap = 'anywhere';
-        card.append(stars, comment, name);
+        const avatar = document.createElement('img');
+        avatar.src = '../assets/images/testimonial-avatar.svg';
+        avatar.alt = '';
+        avatar.width = 48;
+        avatar.height = 48;
+        avatar.className = 'testimonial-avatar';
+        const identity = element('div', 'testimonial-identity', '');
+        const details = element('div', '', '');
+        details.append(stars, name);
+        identity.append(avatar, details);
+        card.append(identity, comment);
         grid.append(card);
       });
       status.textContent = visible.length ? '' : 'No approved testimonials yet.';
