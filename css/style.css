@@ -48,16 +48,21 @@ body.pb-modal-open{overflow:hidden}.vote-stars{display:flex;gap:.15rem;flex-wrap
 /* Homepage technology credits */
 .powered-by-row{display:flex;align-items:center;justify-content:center;gap:.65rem 1rem;flex-wrap:wrap;margin:.8rem auto .2rem;padding:.55rem 1rem;color:var(--pb-muted);font-size:.78rem}
 .powered-by-label{font-weight:800;color:var(--pb-text)}
-.powered-by-item{display:inline-flex;align-items:center;gap:.35rem;white-space:nowrap}
-.powered-by-item img{width:17px;height:17px;display:block;object-fit:contain}
-body.dark-mode .powered-by-item img[src*="openai"],body.dark-mode .powered-by-item img[src*="github"]{filter:invert(1)}
+.powered-by-item{display:inline-flex;align-items:center;gap:.38rem;white-space:nowrap}
+.tech-icon{width:19px;height:19px;display:inline-grid;place-items:center;flex:0 0 19px;border-radius:5px;font-size:10px;font-weight:900;line-height:1;color:#fff;background:#1688ff}
+.tech-icon svg{width:16px;height:16px;display:block;fill:currentColor}
+.agentic-icon{background:linear-gradient(135deg,#8b7cff,#00cfff);color:#061225;font-size:8px}
+.chatgpt-icon{background:#10a37f;font-size:13px}
+.github-icon{background:#24292f;font-size:11px;border-radius:50%}
+.vscode-icon{background:#1688ff}
+.canva-icon{background:linear-gradient(135deg,#00c4cc,#7d2ae8);font-family:Georgia,serif;font-size:13px;font-style:italic}
+.cloudflare-icon{background:#f38020;font-size:12px}
 
 /* Keep all three floating utility actions on the same Prompt Builder button standard. */
 .utility-btn,.utility-btn.support{background:linear-gradient(180deg,#1d90ff 0%,#0b59c7 55%,#063d94 100%);border-color:#65d9ff;color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 7px 18px rgba(0,0,0,.18);transition:transform .2s,background .25s,border-color .25s,color .25s}
 .utility-btn:hover,.utility-btn.support:hover{color:#03170e;background:linear-gradient(180deg,#57f59c 0%,#20d67b 55%,#0ca85a 100%);border-color:#8fffc0;transform:translateY(-2px)}
 
-/* Shared form action row for primary and Cancel buttons. */
+/* Shared form action row. Cancel uses the same standard Prompt Builder button format. */
 .pb-form-actions{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin-top:1.5rem}
-.pb-cancel-button{display:inline-flex;align-items:center;justify-content:center;min-width:150px;padding:.88rem 1.35rem;border-radius:999px;border:1px solid var(--pb-border);background:var(--pb-card);color:var(--pb-text);font-weight:800;text-decoration:none;transition:transform .2s,background .2s,border-color .2s}
-.pb-cancel-button:hover{background:#7d2631;border-color:#a93d4b;color:#fff;transform:translateY(-2px)}
-@media(max-width:575px){.powered-by-row{gap:.55rem .8rem}.pb-form-actions>.pb-button,.pb-form-actions>.pb-cancel-button{width:100%}}
+.pb-form-actions .pb-button{display:inline-flex;align-items:center;justify-content:center}
+@media(max-width:575px){.powered-by-row{gap:.55rem .8rem}.pb-form-actions>.pb-button{width:100%}}
